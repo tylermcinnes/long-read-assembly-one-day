@@ -10,7 +10,6 @@ This long read assembly workshop aims to work through an entire assembly workflo
 
 No single genome can represent the diversity in the human population. Using a single reference genome creates reference biases, adversely affecting variant discovery, gene–disease association studies and the accuracy of genetic analyses.
 
-
 <p align="center">
     <img src="https://s3-us-west-2.amazonaws.com/human-pangenomics/backup/logo-proof-full.png" width="450"/>
 </p>
@@ -25,7 +24,6 @@ You can do things with assemblies that you can't with their constituent data. An
     <img src="https://github.com/human-pangenomics/hprc-tutorials/blob/GA-workshop/assembly/genomics_aotearoa/images/intro/Porubsky_Gaps_Figure1D.png?raw=true" width="450"/>
 </p>
 
-
 In this workshop, we will show you how to make assemblies with PacBio HiFi data, but we will also add in ultra-long Oxford Nanopore reads. The resulting assemblies will just as good as, if not better than, the assemblies shown on the right in the above image.
 
 ## Assembly Workflows & Our Approach
@@ -36,4 +34,4 @@ The approach we take in this workshop will reflect a normal assembly workflow.
     <img src="https://github.com/human-pangenomics/hprc-tutorials/blob/GA-workshop/assembly/genomics_aotearoa/images/intro/Assembly_Workflow.svg?raw=true" width="750"/>
 </p>
 
-On day one, we will learn about the type of data that goes into current assemblers. On day two, we will use two of the most popular and powerful assemblers currently available. And on day three, we will take a look at the assemblies to assess their quality and see what we can do with them.
+Today we will learn about the type of data that goes into current assemblers, we will use two of the most popular and powerful assemblers currently available, and finally, we will take a look at the assemblies to assess their quality and see what we can do with them.
