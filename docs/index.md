@@ -11,6 +11,7 @@
 !!! calendar-days "Workshop schedule"
 
     Lesson overview
+
     - [Introduction to the workshop](pages/day0_intro.md)
     - [How are assemblies created?](pages/day1a_read_inputs.md)
     - [Familiarize Ourselves with the Data](pages/day1b_familiarise_w_data.md)
