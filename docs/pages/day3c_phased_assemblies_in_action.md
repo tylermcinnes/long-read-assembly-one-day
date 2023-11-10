@@ -21,7 +21,7 @@ using sketching methods to radically reduce the computational requirements.
 Visualizing tandem repeats like this _requires_ an assembly that spans all the
 repeat arrays and assembles them accurately, making this a potent example of
 the benefits of combining highly-accurate, long reads (like PacBio HiFi) with
-ultralong reads from ONT in the assembly process with 
+ultralong reads from ONT in the assembly process with
 [hifiasm](https://github.com/chhylp123/hifiasm)
 ([Cheng _et al._ 2022](https://doi.org/10.1038/s41587-022-01261-x)) or
 [Verkko](https://github.com/marbl/verkko)
@@ -49,7 +49,7 @@ software can&rsquo;t distinguish between repeat copies.
     window, whether the neighboring windows are dependent on eachother, etc.
     In general, the representative sequences are found by sliding along the
     sequence and selecting a representative subsequence in the given window.
-    
+
     Many other tools use sketching in some way, here are a few examples:
 
     - <a href="https://github.com/marbl/Mash">Mash</a> (<a href="https://doi.org/10.1186/s13059-016-0997-x">Ondov <em>et al.</em> 2016</a>)
@@ -59,9 +59,8 @@ software can&rsquo;t distinguish between repeat copies.
                     &lt;-- Used in
                     <a href="https://github.com/marbl/verkko">Verkko</a></strong>
                     (<a href="https://doi.org/10.1038/s41587-023-01662-6">Rautiainen <em>et al.</em> 2023</a>)!
- 
-    - <a href="https://github.com/chhylp123/hifiasm">hifiasm</a> (<a href="https://doi.org/10.1038/s41587-022-01261-x">Cheng <em>et al.</em> 2022</a>)
 
+    - <a href="https://github.com/chhylp123/hifiasm">hifiasm</a> (<a href="https://doi.org/10.1038/s41587-022-01261-x">Cheng <em>et al.</em> 2022</a>)
 
 We're going to run ModDotPlot on part of the Y chromosome from our
 earlier assembly. First we&rsquo;ll need to identify the appropriate chunk,
@@ -84,9 +83,9 @@ can map against the human CHM13-T2T reference.
 !!! terminal "code"
 
     ```bash
-    cd ~/lra
-    mkdir day3c-moddotplot
-    cd day3c-moddotplot
+    cd ~/obss_2023/genome_assembly/
+    mkdir moddotplot
+    cd moddotplot
     ```
 
 **Get the files**
@@ -130,14 +129,14 @@ to wait for the job to complete, but this is what the command would look like:
     ```
 
 ??? question "How would I submit this as a job?"
-    
+
     Submit it as a job with `sbatch`. First copy the command into a
     script named `mashmap.sh`:
 
 
     ```bash
     #!/bin/bash -e
-    
+
     #SBATCH --account       nesi02659
     #SBATCH --job-name      mashmap
     #SBATCH --cpus-per-task 16
@@ -146,11 +145,11 @@ to wait for the job to complete, but this is what the command would look like:
     #SBATCH --partition     milan
     #SBATCH --output        slurmlogs/%x.%j.out
     #SBATCH --error         slurmlogs/%x.%j.err
-    
-    
+
+
     module purge
     module load MashMap/3.0.4-Miniconda3
-    
+
     mashmap -f "one-to-one" \
         -k 16 --pi 90 \
         -s 100000 -t 16 \
@@ -160,7 +159,7 @@ to wait for the job to complete, but this is what the command would look like:
     ```
 
     Then submit the job with the following command:
-    
+
     !!! terminal "code"
 
         ```bash
@@ -206,7 +205,7 @@ looking at long alignments only.
     ```
 
 ??? clipboard-question "What is the `awk` command doing ?"
-    
+
     This `awk` command is keeping only alignments (remember, one
     alignment is on each line of the file) that map to chrY; the sixth column
     is the "reference" or "target" sequence name. The third and fourth columns
@@ -216,11 +215,11 @@ looking at long alignments only.
     consequence of ignoring contigs that are shorter than 1 Mbp.
 
     ??? info "Wait, what are each of the columns again?"
-    
+
         !!! quote "According to the MashMap README"
 
             The output is space-delimited with each line consisting of query name, length, 0-based start, end, strand, target name, length, start, end, and mapping nucleotide identity.
-        
+
         Re-written as a numbered list:
 
         !!! rectangle-list "MashMap output columns"
@@ -236,7 +235,6 @@ looking at long alignments only.
             9. end
             10. mapping nucleotide identity
 
-
 **View the output file**
 
 Now that we&rsquo;ve culled the alignments, viewing them should be much easier:
@@ -250,7 +248,7 @@ Now that we&rsquo;ve culled the alignments, viewing them should be much easier:
 **Which contigs belong to chrY?**
 
 ??? success "Answer"
-    
+
     `pat-0000724`, `pat-0000725`,  and `pat-0000727` are probably chrY.
 
 Others may be as well, but it is difficult to tell without a more refined
@@ -272,6 +270,7 @@ covered by each alignment:
         > hg2hap2-x-chm13.gt1m-chrY.annotated.txt
     less -S hg2hap2-x-chm13.gt1m-chrY.annotated.txt
     ```
+
 <!-- this was wrong- it was based on only --pi 95, which is why we saw only a small amount:
 The astute observer will wonder why pat-0000724 should be included when
 it has only 1% of the contig is aligned. Note that only 1% of the
@@ -347,6 +346,7 @@ these three contigs cover the majority, if not all, of chrY:
 <img src="https://github.com/human-pangenomics/hprc-tutorials/blob/GA-workshop/assembly/genomics_aotearoa/images/assembly-in-action/mashmap_hg002-x-chm13_chrY.png?raw=true" alt="Dotplot of HG002 contigs against CHM13 chrY">
 
 ## Create self dot plots for each contig
+
 ModDotPlot is still in development, and it cannot currently support doing
 multiple self comparisons at one time. We will need to create separate fasta
 files for our contigs of interest.
@@ -375,8 +375,8 @@ large sequences (>100 Mbp). Let's create a script to submit with
 !!! terminal "code"
 
     ```bash
-    #!/bin/bash -e 
-    
+    #!/bin/bash -e
+
     #SBATCH --account       nesi02659
     #SBATCH --job-name      moddotplot
     #SBATCH --cpus-per-task 4
@@ -384,10 +384,10 @@ large sequences (>100 Mbp). Let's create a script to submit with
     #SBATCH --mem           8G
     #SBATCH --partition     milan
     #SBATCH --output        slurmlogs/%x.%j.log
-    
+
     module purge
     module load ModDotPlot/2023-06-gimkl-2022a-Python-3.11.3
-    
+
     for CTG in pat-000072{4,5,7}
     do
         moddotplot \
@@ -406,7 +406,7 @@ Then submit with `sbatch`:
     ```
 
 ??? clipboard-question "What do these parameters do ?"
-    
+
     You can run `moddotplot -h` to find out (and enjoy some excellent ASCII art).
     Here are the options we used:
 
@@ -414,13 +414,13 @@ Then submit with `sbatch`:
     Required input:
       -i INPUT [INPUT ...], --input INPUT [INPUT ...]
                             Path to input fasta file(s)
-    
+
     Mod.Plot distance matrix commands:
       -k KMER, --kmer KMER  k-mer length. Must be < 32 (default: 21)
-    
+
       -id IDENTITY, --identity IDENTITY
                             Identity cutoff threshold. (default: 80)
-    
+
       -o OUTPUT, --output OUTPUT
                             Name for bed file and plots. Will be set to input fasta file name if not provided. (default: None)
     ```
@@ -442,4 +442,3 @@ diagonal of the dotplot, rotated such that the diagonal is along the X-axis of
 the plot. Go ahead a view these files now.
 
 !!! question "What do you observe?"
-

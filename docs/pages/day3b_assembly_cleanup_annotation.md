@@ -1,20 +1,20 @@
 # 6. Assembly Cleanup & Genome Annotation
 
-
 ## Assembly Cleanup
+
 Once you have a genome, and you think you want to hold onto it for a while and start doing actual analysis it is time to check it for contamination. In particular, before using and sharing your assembly it is best to make sure that you don't have:
 
-* Contamination from other species
-* Lots of contigs for Epstein Barr Virus (EBV) or mitochondrial sequence
-* Adapters embedded in your contigs
+- Contamination from other species
+- Lots of contigs for Epstein Barr Virus (EBV) or mitochondrial sequence
+- Adapters embedded in your contigs
 
 When you upload your assembly to Genbank, the sequence is automatically screen for contaminants and if anything is found you have to fix it and upload the fixed assembly. It's much better to take a look on your end. Luckily NCBI has released a toolkit that can be run locally. There are tools to look find/fix adapter sequences in your assembly (fcs-adapter) and for finding/fixing foreign genomic contamination (fcs-gx). We will be running fcs-gx, so let's look at the steps that fcs-gx runs.
 
-* Repeat and low-complexity sequence masking
-* Alignment to reference database using GX aligner
-* Alignment refinement with high-scoring taxa matches
-* Classifying sequences to assign taxonomic divisions
-* Generating contaminant cleaning actions
+- Repeat and low-complexity sequence masking
+- Alignment to reference database using GX aligner
+- Alignment refinement with high-scoring taxa matches
+- Classifying sequences to assign taxonomic divisions
+- Generating contaminant cleaning actions
 
 With that understanding, we are ready to test it out for ourselves...
 
@@ -23,9 +23,9 @@ With that understanding, we are ready to test it out for ourselves...
 !!! terminal "code"
 
     ```bash
-    cd ~/lra
-    mkdir -p day3b_cleanup/fcs/
-    cd day3b_cleanup/fcs/
+    cd ~/obss_2023/genome_assembly/
+    mkdir -p cleanup/fcs/
+    cd cleanup/fcs/
     ```
 
 **Download the Foreign Contamination Screen (FCS) tool from NCBI**
@@ -40,9 +40,9 @@ With that understanding, we are ready to test it out for ourselves...
 This tool is a python script that calls a Docker/Singularity container. This was done because contamination screens notoriously require a ton of dependencies. So having a Docker container makes things easier on the user. The docker container requires that a database of contaminants are downloaded. We have already downloaded the test database here: `/nesi/nobackup/nesi02659/LRA/resources/fcs/test-only`. The container has already been downloaded as well, we just need to load the singularity module and let FCS know where the container is:
 
 !!! terminal "code"
-    
+
     ```bash
-    module purge 
+    module purge
     module load Python/3.8.2-gimkl-2020a
     module load Singularity/3.11.3
     export FCS_DEFAULT_IMAGE=/opt/nesi/containers/fcs/fcs-gx-0.4.0.sif
@@ -60,8 +60,9 @@ Note that the test data is not human (this matters for the `--tax-id` parameter)
         --fasta ./fcsgx_test.fa.gz \
         --out-dir ./gx_out \
         --gx-db /nesi/nobackup/nesi02659/LRA/resources/fcs/test-only  \
-        --tax-id 6973 
+        --tax-id 6973
     ```
+
 ??? success "Here is what is printed to the screen"
 
     ```bash
@@ -76,44 +77,44 @@ Note that the test data is not human (this matters for the `--tax-id` parameter)
     gx-db     : /app/db/gxdb/test-only/test-only.gxi
     gx-ver    : Mar 10 2023 15:34:33; git:v0.4.0-3-g8096f62
     output    : /output-volume//fcsgx_test.fa.6973.taxonomy.rpt
-    
+
     --------------------------------------------------------------------
-    
-    
+
+
         GX requires the database to be entirely in RAM to avoid thrashing.
         Consider placing the database files in a non-swappable tmpfs or ramfs.
         See https://github.com/ncbi/fcs/wiki/FCS-GX for details.
         Will prefetch (vmtouch) the database pages to have the OS cache them in main memory.
-    
-    Prefetching /app/db/gxdb/test-only/test-only.gxs 99%...                                
+
+    Prefetching /app/db/gxdb/test-only/test-only.gxs 99%...
     Prefetched /app/db/gxdb/test-only/test-only.gxs in 0.243985s; 0.290255 GB/s. The file is 100% in RAM.
-    Prefetching /app/db/gxdb/test-only/test-only.gxi 99%...                         
+    Prefetching /app/db/gxdb/test-only/test-only.gxi 99%...
     Prefetched /app/db/gxdb/test-only/test-only.gxi in 7.24798s; 0.62397 GB/s. The file is 100% in RAM.
     Collecting masking statistics...
     Collected masking stats:  0.0295689 Gbp; 3.21688s; 9.19177 Mbp/s. Baseline: 1.0774
-    
-    28.2MiB 0:00:20 [1.34MiB/s] [1.34MiB/s] [==========================================================================] 102%            
+
+    28.2MiB 0:00:20 [1.34MiB/s] [1.34MiB/s] [==========================================================================] 102%
     Processed 714 queries, 29.1754Mbp in 14.3783s. (2.02913Mbp/s); num-jobs:294
-    
+
     Warning: asserted div 'anml:insects' is not represented in the output!
-    
-    
-    
+
+
+
     --------------------------------------------------------------------------------------------------
     Warning: Asserted tax-div 'anml:insects' is well-represented in db, but absent from inferred-primary-divs.
     This means that either asserted tax-div is incorrect, or the input is predominantly contamination.
     Will trust the asserted div and treat inferred-primary-divs as contaminants.
     --------------------------------------------------------------------------------------------------
-    
+
     Asserted div               : anml:insects
     Inferred primary-divs      : ['prok:CFB group bacteria']
     Corrected primary-divs     : ['anml:insects']
     Putative contaminant divs  : ['prok:CFB group bacteria']
     Aggregate coverage         : 51%
     Minimum contam. coverage   : 30%
-    
+
     --------------------------------------------------------------------
-    
+
     fcs_gx_report.txt contamination summary:
     ----------------------------------------
                                     seqs      bases
@@ -121,9 +122,9 @@ Note that the test data is not human (this matters for the `--tax-id` parameter)
     TOTAL                            243   27170378
     -----                          ----- ----------
     prok:CFB group bacteria          243   27170378
-    
+
     --------------------------------------------------------------------
-    
+
     fcs_gx_report.txt action summary:
     ---------------------------------
                                     seqs      bases
@@ -132,12 +133,11 @@ Note that the test data is not human (this matters for the `--tax-id` parameter)
     -----                          ----- ----------
     EXCLUDE                          214   25795430
     REVIEW                            29    1374948
-    
+
     --------------------------------------------------------------------
     ```
 
 There is a file created called something like `*fcs_gx_report.txt`. Open it in your terminal, or if it's easier you can view it on the [FCS GitHub](https://raw.githubusercontent.com/ncbi/fcs/main/examples/fcsgx_test.6973.fcs_gx_report.txt).
-
 
 ??? success "Here's how you would run your actual data"
 
@@ -171,7 +171,7 @@ There is a file created called something like `*fcs_gx_report.txt`. Open it in y
     --fasta ./HG002.mat.fa.gz \
     --out-dir ./asm_fcs_output \
     --gx-db /nesi/nobackup/nesi02659/LRA/resources/fcs/gxdb \
-    --tax-id 9606 
+    --tax-id 9606
     ```
     Then you would just run the slurm script. Don't do this now. The results are boring for this assembly and the run takes 500GB of memory! (This is required to load the contamination database into memory -- if you don't give fcs enough memory it will take much much longer.)
 
@@ -187,7 +187,7 @@ without annotation to provide context about the raw bases. Broadly speaking, an
 annotation is any information about some region of the genome, e.g., the GC% in
 a given window or whether and in which way a particular region is repetitive.
 Accordingly, annotation techniques, computational resources, input requirements,
-and output formats can vary widely.  However, the term "annotation" typically
+and output formats can vary widely. However, the term "annotation" typically
 refers to the more specific case of locating the protein-coding genes, ideally
 specifying features such as exon-intron boundaries, untranslated regions (UTRs),
 splice variants, etc. Accordingly, we will focus on this type of annotation
@@ -219,7 +219,7 @@ makes use of another genome assembly with annotations you wish to "copy" onto
 your assembly.
 
 ??? clipboard-question "What is the easiest way to annotate my genome of interest ?"
-    
+
     The easiest way to get a genome annotated is to have someone else do it. If
     sharing data with NCBI is possible and your assembly is the best option to
     represent your species of interest, they may be willing to annotate your
@@ -227,8 +227,7 @@ your assembly.
     <a href="https://www.ncbi.nlm.nih.gov/genome/annotation_euk/process/">their pipeline</a>.
     Otherwise, finding a collaborator with expertise is a good option.
 
-
-??? clipboard-question "What are the most common formats for sharing annotation data ?" 
+??? clipboard-question "What are the most common formats for sharing annotation data ?"
 
     The most common formats are
     <a href="https://genome.ucsc.edu/FAQ/FAQformat.html#format1">BED (Browser Extensible Data)</a>,
@@ -238,7 +237,6 @@ your assembly.
     <a href="http://genome.cse.ucsc.edu/goldenPath/help/wiggle.html">Wiggle</a>
     format and its variants are also common for displaying information in a genome
     browser.
-
 
 ??? clipboard-question "Which tool(s) should I use for my project ?"
 
@@ -267,9 +265,8 @@ your assembly.
     href="https://gfacs.readthedocs.io">gFACs</a> can help with filtering,
     analysis, and conversion tasks.
 
-
 ??? clipboard-question "How can I learn more about annotation ?"
-    Please consider the following sources:
+Please consider the following sources:
 
     - Review of eukaryotic genome annotation written for beginners
     (Yandell and Ence, 2012; doi:
@@ -295,7 +292,6 @@ your assembly.
     protocol</a> was used to annotate a non-model fish genome (Pickett
     and Talma <em>et al.</em>, 2022; doi: <a
     href="https://doi.org/10.46471/gigabyte.44">10.46471/gigabyte.44</a>).
-  
 
 ### Annotation with Liftoff
 
@@ -328,7 +324,7 @@ of HG002.
 !!! terminal "code"
 
     ```shell
-    cd ~/lra
+    cd ~/obss_2023/genome_assembly/
     mkdir liftoff-annotation
     cd liftoff-annotation
     ```
@@ -347,7 +343,7 @@ of HG002.
     ```
 
 ??? info "What's with the `*.sqlite3` file?"
-    
+
     Liftoff stores features from the GFF file in a SQLite database. The first
     part of any liftoff run processes the GFF file and creates the database,
     which by default is written to the same file location and name with a
@@ -376,12 +372,12 @@ First create a shell script `liftoff.sh` with the following content:
 
     ```bash
     #!/bin/bash
-    
+
     set -euo pipefail
-    
+
     module purge
     module load Liftoff/1.6.3.2-gimkl-2022a-Python-3.11.3
-    
+
     liftoff \
         -p 8 \
         -db chm13-annotations.gff.liftoff.sqlite3 \
@@ -392,10 +388,10 @@ First create a shell script `liftoff.sh` with the following content:
 
 ??? info "What do each of these options do?"
 
-    `-p` specifies the number of threads to use. 
+    `-p` specifies the number of threads to use.
 
-    `-db` specifies the location of the SQLite database of features extracted by Liftoff from the GFF file with the input annotations for the reference. 
-    
+    `-db` specifies the location of the SQLite database of features extracted by Liftoff from the GFF file with the input annotations for the reference.
+
     `-o` specifies the location of the GFF file with the output annotations for the target.
 
     The two positional parameters at the end are respectively the target assembly (our HG002 assembly) and the reference assembly (T2T-CHM13). Run the following command to see all the options described in more detail:
@@ -461,6 +457,7 @@ output GFF file:
     igvtools sort asm.hap1.annotations.gff asm.hap1.annotations.sorted.gff
     igvtools index asm.hap1.annotations.sorted.gff
     ```
+
 These operations are small enough that you should not need to submit a job for
 them.
 
@@ -484,11 +481,12 @@ them.
 <!-- END OF ANNOTATION SECTION -->
 
 ## Long Read/Contig Mapping
+
 We are ready to map long reads and assembly contigs to genomes. For this we need a set of tools that are different from what you might be used to using for Illumina data. You might be asking "what's the matter with bwa-mem for long reads?" It is [slow](https://lh3.github.io/2018/04/02/minimap2-and-the-future-of-bwa#:~:text=For%20long%20reads%2C%20minimap2%20is,a%20typical%20long%2Dread%20mapper.) and probably inaccurate for this application. So let's jump in to long read mappers and see what we can do with them.
 
 ### Mashmap: Super Fast (Approximate) Mapping
 
-The first thing we would like to do is to find out how our assembled genome compares to the T2T genome CHM13. 
+The first thing we would like to do is to find out how our assembled genome compares to the T2T genome CHM13.
 
 !!! rectangle-list "If we can map our assembly quickly onto CHM13, we can answer questions like:"
 
@@ -499,15 +497,15 @@ The first thing we would like to do is to find out how our assembled genome comp
 !!! quote ""
 
     [MashMap](https://genomeinformatics.github.io/mashmap/) is a super fast mapper that is commonly used for these kinds of questions. MashMap doesn't seed and extend, it takes sequences and plays tricks with kmers. Loosely speaking if you take a sequence and get all of its kmers of a certain size and then sort those kmers, you can do a lot with just the "smallest" kmer (this is called a minimizer). MashMap uses a set of those smallest kmers to say: this sequence here and my query sequence share a lot of smallest kmers. The output of MashMap is an approximation of read position and identity. Let's actually use it now to align our asembly to CHM13 and we will use the results to map our contigs onto chromosomes and to try and find some T2T chromosomes in our assemblies.
-    
+
 **Create A Directory**
 
 !!! terminal "code"
 
     ```bash
-    cd ~/lra
-    mkdir -p day3b_annotation/mashmap
-    cd day3b_annotation/mashmap
+    cd ~/obss_2023/genome_assembly/
+    mkdir -p annotation/mashmap
+    cd annotation/mashmap
     ```
 
 **Link the files we need**
@@ -542,19 +540,17 @@ The first thing we would like to do is to find out how our assembled genome comp
       -o asm-to-chm13.mashmap.out
     ```
 
-??? filter "Take a look at the parameters for MashMap. What are `-f`, `--pi`, and `-s` ?"  
+??? filter "Take a look at the parameters for MashMap. What are `-f`, `--pi`, and `-s` ?"
 
-    `--pi` is the percent identity. The default value is 85 which means that mappings with 85% or more identity should be reported. 
-    
-    `-s` is the segment length. MasMap will not report segments under this value. 
-    
+    `--pi` is the percent identity. The default value is 85 which means that mappings with 85% or more identity should be reported.
+
+    `-s` is the segment length. MasMap will not report segments under this value.
+
     `-f` is the filter mode. After MashMap identifies mappings, it can go through and filter to ensure only the best mapping is reported (if we pass "map") or in our case that all good mappings are reported (if we pass "one-to-one").
 
-
 ??? filter "Why did we use the values that we used for `--pi` and `-s` ?"
-    
-    Since we are mapping a human assembly against another human assembly we expect the sequences to be very similar. This is why we overwrote the default value of 85 for `--pi`. If we were to use the default value for `-s` (5000) then we would likely see a lot of hits from homologous regions. This may be interesting, but if we want to know how good our assembly is extra hits will just confuse things.
 
+    Since we are mapping a human assembly against another human assembly we expect the sequences to be very similar. This is why we overwrote the default value of 85 for `--pi`. If we were to use the default value for `-s` (5000) then we would likely see a lot of hits from homologous regions. This may be interesting, but if we want to know how good our assembly is extra hits will just confuse things.
 
 **Once the mapping is done, let's take a look at the output.**
 
@@ -563,7 +559,6 @@ The first thing we would like to do is to find out how our assembled genome comp
     ```bash
     head asm-to-chm13.mashmap.out
     ```
-
 
 !!! rectangle-list "Note that the output is similar to the Paired Alignment Format, or [PAF](https://github.com/lh3/miniasm/blob/master/PAF.md), and has the following columns:"
 
@@ -575,11 +570,10 @@ The first thing we would like to do is to find out how our assembled genome comp
     * target name
     * length
     * start
-    * end 
+    * end
     * mapping nucleotide identity (estimate)
 
-
-The most recent versions of MashMap actually output PAF by defalt. But not the version we are using here. 
+The most recent versions of MashMap actually output PAF by defalt. But not the version we are using here.
 
 **Now generate a dot plot of the alignment**
 
@@ -593,20 +587,19 @@ And take a look at it (you can click on it in your file explorer).
 
 ??? clipboard-question "Does anything stick out to you ?"
 
-    There is no sequence in the assembly mapping to chrY. This makes sense as this is the maternal haplotype's assembly. 
-
+    There is no sequence in the assembly mapping to chrY. This makes sense as this is the maternal haplotype's assembly.
 
 !!! question "Exercise: Can We Find Any Contigs/Scaffolds That Are T2T?"
 
     Look through the dotplot to try and identify a contig or two that are assembled T2T. Once you've done that we will have to bring in another tool to make sure that there are actually telomeric repeats on the 5' and 3' ends. (Some people care about the presence of telomeric repeats when defining what T2T means.)
-    
+
     Run the `telo` tool from seqtk to identify (human) telomeric ends:
     ```
     module load seqtk
     seqtk telo assembly.haplotype1.fasta > telos.bed
     ```
-    
-    Now look through the bed file and find the contig you are interested in to see if there are telomeres on both ends. 
+
+    Now look through the bed file and find the contig you are interested in to see if there are telomeres on both ends.
 
 ??? user-secret "Did you find any T2T contigs or Scaffolds ?"
 
@@ -614,12 +607,13 @@ And take a look at it (you can click on it in your file explorer).
 
 **Closing notes**
 
-1. This could all be automated, of course. The T2T and HPRC consortiums have workflows that go through assemblies to determine T2T status at the chromosomal level, but those workflows are pretty similar to what we did above, actually. 
+1. This could all be automated, of course. The T2T and HPRC consortiums have workflows that go through assemblies to determine T2T status at the chromosomal level, but those workflows are pretty similar to what we did above, actually.
 
 2. Not having base-level information is actually ok for what we just did. If you would like base level information at only a few fold of the run cost of mashmap (so still very fast), then you probably want to check out [wfmash](https://github.com/waveygang/wfmash/blob/master/README.md). It can be used for alignments of long reads (100kb+) or assemblies at very large scales.
 
-## Minimap2: 
-If you are mapping long read data and you'd like to have base-level alignment, minimap2 is probably your first stop. 
+## Minimap2:
+
+If you are mapping long read data and you'd like to have base-level alignment, minimap2 is probably your first stop.
 
 Today we are going to use minimap2 to align ONT reads that have 5mC information stored in Mm/Ml tags to our diploid assembly.
 
@@ -628,9 +622,9 @@ Today we are going to use minimap2 to align ONT reads that have 5mC information 
 !!! terminal "code"
 
     ```bash
-    cd ~/lra
-    mkdir -p day3b_annotation/minimap2
-    cd day3b_annotation/minimap2
+    cd ~/obss_2023/genome_assembly/
+    mkdir -p annotation/minimap2
+    cd annotation/minimap2
     ```
 
 **Copy over our Verkko trio assembly**
@@ -644,6 +638,7 @@ We are going to use the diploid version of our Verkko trio assembly. (This just 
         /nesi/nobackup/nesi02659/LRA/resources/assemblies/verkko/full/trio/assembly/assembly.fasta \
         verkko_trio_diploid.fa
     ```
+
 **Create a minimap2 slurm script**
 
 Open your favourite text editor
@@ -653,13 +648,14 @@ Open your favourite text editor
     ```bash
     nano ont_mm2.sl
     ```
+
 And paste in the following
 
 !!! terminal "code"
 
     ```bash
     #!/bin/bash -e
-    
+
     #SBATCH --account       nesi02659
     #SBATCH --job-name      minimap2-ont
     #SBATCH --cpus-per-task 48
@@ -668,22 +664,22 @@ And paste in the following
     #SBATCH --partition     milan
     #SBATCH --output        slurmlogs/%x.%j.log
     #SBATCH --error         slurmlogs/%x.%j.err
-    
+
     ## load modules
     module purge
     module load minimap2/2.24-GCC-11.3.0
     module load SAMtools/1.16.1-GCC-11.3.0
-    
+
     ## Create minimap2 index of our diploid assembly
     minimap2 \
         -k 17 \
         -I 8G \
         -d verkko_trio_diploid.fa.mmi \
         verkko_trio_diploid.fa
-    
+
     ## minimap parameters appropriate for nanopore
     in_args="-y -x map-ont --MD --eqx --cs -Y -L -p0.1 -a -k 17 -K 10g"
-    
+
     #do the mapping with methylation tags by dumping the Mm/Ml tags to the fastq headers
     samtools fastq \
         -TMm,Ml /nesi/nobackup/nesi02659/LRA/resources/ont_ul/03_08_22_R941_HG002_2_Guppy_6.1.2_5mc_cg_prom_sup.bam \
@@ -691,20 +687,20 @@ And paste in the following
         | samtools view -@ 24 -bh - \
         | samtools sort -@ 24 - > \
         verkko_trio_diploid.mm2.5mC.bam
-    
+
     samtools index verkko_trio_diploid.mm2.5mC.bam
     ```
     **And run the script**
 
-    !!! terminal 
+    !!! terminal
     ```bash
     sbatch ont_mm2.sl
     ```
+
 This should take only 3 hours or so, but we have some pre-baked results for you already. We will use these results in the next section.
 
+??? clipboard-question "Why did we align to the diploid version of our assembly ?"
 
-??? clipboard-question "Why did we align to the diploid version of our assembly ?" 
-    
     The traditional thing to do is to align your data to a haploid or pseudo-haploid assembly like CHM13 or GRCh38. We are diploid individuals, though. And for some use cases we want to align long reads to a diploid assembly in order to have the reads segregate by haplotype. When we are aligning a samples reads to its own assembly this is especially important.
 
 ### Visualize The Alignments In IGV
@@ -724,19 +720,18 @@ This should take only 3 hours or so, but we have some pre-baked results for you 
     2. We need to use our assembly as the genome file. Do that by clicking the **Genomes** dropdown at the top and then select **Load Genome From File**. Navigate to your folder and select the Verkko trio genome that we copied in.
     3. Load the 5mC bam by clicking on the **File** dropdown then selecting **Load From File**
     4. Show the methylation predictions by right clicking on the alignment track and selecting **Color alignments by**, then click **base modifications (5mc)**
-    
+
 **Explore the data a bit**
 
 Zoom in on a random region that is a few hundred basepairs in size. You can see the methylation levels in the track histogram and in the reads themselves. Red is methylated and blue is unmethylated.
 
-If you are familiar with ONT data already you know that ONT and PacBio have the ability to detect base modifications without any additional steps like bisulfite conversion. What we are adding here is the ability to look at methylation in the context of a sample's own assembly. Maybe that wouldn't matter if you are looking at regions of the genome which are structurally consistent across samples&mdash;like promoters for well known genes. 
+If you are familiar with ONT data already you know that ONT and PacBio have the ability to detect base modifications without any additional steps like bisulfite conversion. What we are adding here is the ability to look at methylation in the context of a sample's own assembly. Maybe that wouldn't matter if you are looking at regions of the genome which are structurally consistent across samples&mdash;like promoters for well known genes.
 
-Take a look around `mat-0000038` (this is the biggest contig that maps to chrX). 
-
+Take a look around `mat-0000038` (this is the biggest contig that maps to chrX).
 
 ??? clipboard-question "Why did we choose to show you an example in chrX ?"
-    In male samples chrX is haploid, so outside of the psuedoautosomal, or PAR, regions we don't have to worry about whether or not our reads map to the correct haplotype.
+In male samples chrX is haploid, so outside of the psuedoautosomal, or PAR, regions we don't have to worry about whether or not our reads map to the correct haplotype.
 
 ??? clipboard-question "What would have happened if we had just aligned this data to CHM13 ?"
-    
+
     Centromeres are highly repetitive and alpha satellite arrays can vary from individual to individual in size by more than a factor of two. So aligning centromeric reads from one individual to another individual's assembly is an inherently dodgy proposition.
