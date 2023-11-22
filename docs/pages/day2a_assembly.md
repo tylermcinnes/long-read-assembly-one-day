@@ -1,6 +1,6 @@
 # 4. Assembly
 
-!!! info "Here is a rundown of what we will do today:"
+!!! info "Here is a rundown of what we will do:"
 
     * Learn about how Verkko creates assemblies
     * Run Hifiasm with test data (HiFi only)
