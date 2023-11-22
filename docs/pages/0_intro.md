@@ -31,7 +31,7 @@ In this workshop, we will show you how to make assemblies with PacBio HiFi data,
 The approach we take in this workshop will reflect a normal assembly workflow.
 
 <p align="center">
-    <img src="https://github.com/human-pangenomics/hprc-tutorials/blob/GA-workshop/assembly/genomics_aotearoa/images/intro/Assembly_Workflow.svg?raw=true" width="750"/>
+    <img src="https://raw.githubusercontent.com/otagobioinformaticsspringschool/long-read-assembly/612d17404412c8e72b0c14d35ff3296248c425a9/docs/images/intro/Assembly_Workflow.svg" width="750"/>
 </p>
 
 Today we will learn about the type of data that goes into current assemblers, we will use two of the most popular and powerful assemblers currently available, and finally, we will take a look at the assemblies to assess their quality and see what we can do with them.
