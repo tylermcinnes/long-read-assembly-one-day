@@ -12,13 +12,13 @@
 
     Lesson overview
 
-    - [Introduction to the workshop](pages/day0_intro.md)
-    - [How are assemblies created?](pages/day1a_read_inputs.md)
-    - [Familiarize Ourselves with the Data](pages/day1b_familiarise_w_data.md)
-    - [Assembly](pages/day2a_assembly.md)
-    - [Assembly QC](pages/day3a_assembly_qc.md)
-    - [Assembly clean-up](pages/day3b_assembly_cleanup_annotation.md)
-    - [Phased assemblies in action](pages/day3c_phased_assemblies_in_action.md)
+    - [Introduction to the workshop](pages/0_intro.md)
+    - [How are assemblies created?](pages/1_read_inputs.md)
+    - [Familiarize Ourselves with the Data](pages/2_familiarise_w_data.md)
+    - [Assembly](pages/3_assembly.md)
+    - [Assembly QC](pages/4_assembly_qc.md)
+    - [Assembly clean-up](pages/5_assembly_cleanup_annotation.md)
+    - [Phased assemblies in action](pages/6_phased_assemblies_in_action.md)
 
 ??? example "Supplementary materials"
 
