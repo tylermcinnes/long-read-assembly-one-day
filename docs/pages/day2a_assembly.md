@@ -125,7 +125,6 @@ And actually run the test data
         2> test.log &
     ```
 
-This should take around 3 minutes. Once the run is complete take a look at the top of the log:
 
 !!! terminal "code"
 
