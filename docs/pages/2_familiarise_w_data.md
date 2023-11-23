@@ -2,7 +2,7 @@
 
 Let's get our hands on some data so we can see with our own eyes what HiFi and UL data look like.
 
-**Create A Directory**
+**Start Into the Right Directory**
 
 !!! terminal "code"
     ```bash
