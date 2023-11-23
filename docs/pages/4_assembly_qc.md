@@ -253,9 +253,9 @@ Let's try this out on the _E. coli_ Verkko assembly. First we need a Meryl datab
 !!! terminal "code"
 
     ```bash
-    cd ~/obss_2023/genome_assembly
-    mkdir -p  assembly_qc/merqury
-    cd assembly_qc/merqury
+    cd ~/obss_2023/genome_assembly/assembly_qc
+    mkdir   merqury
+    cd merqury
     ```
   We just made a directory for our runs, now let's sym link the fasta and reads here so we can refer to them more easily
     ```
@@ -280,8 +280,8 @@ Let's try this out on the _E. coli_ Verkko assembly. First we need a Meryl datab
         #SBATCH --account=nesi02659
         #SBATCH --job-name=meryl
         #SBATCH --time=00:15:00
-        #SBATCH --cpus-per-task=8
-        #SBATCH --mem=24G
+        #SBATCH --cpus-per-task=2
+        #SBATCH --mem=4G
         #SBATCH --partition=milan
 
         # Modules
@@ -289,7 +289,7 @@ Let's try this out on the _E. coli_ Verkko assembly. First we need a Meryl datab
         module load Merqury/1.3-Miniconda3
 
         # Run
-        meryl count k=30 memory=24 threads=8 \
+        meryl count k=30 memory=4 threads=2 \
           hifi.fastq.gz \
           output read-db.meryl
         ```
@@ -359,7 +359,7 @@ Use your text editor of choice to make a Slurm script (`run_merqury.sl`) to run 
     #SBATCH --job-name      merqury1
     #SBATCH --cpus-per-task 8
     #SBATCH --time          00:15:00
-    #SBATCH --mem           40G
+    #SBATCH --mem           1G
     #SBATCH --output        slurmlogs/%x.%j.log
     #SBATCH --error         slurmlogs/%x.%j.err
     #SBATCH --partition     milan
@@ -388,7 +388,7 @@ To find out the QV, we want the file named `output.qv`. Take a look at it and tr
 
 ### Using Merqury in trio mode
 
-So we just ran Merqury on our E. coli assembly, and evaluated it using the HiFi reads that we used for that assembly. Merqury can also utilize trio data (using those hapmer DBs we talked about before) to evaluate the phasing of an assembly, so let's try that with our HG002 trio data.
+We just ran Merqury on our E. coli assembly, and evaluated it using the HiFi reads that we used for that assembly. Merqury can also utilize trio data (using those hapmer DBs we talked about before) to evaluate the phasing of an assembly, so let's try that with our HG002 trio data. We can create run_merqury_trio.sl to do so.
 
 !!! terminal "code"
 
@@ -412,6 +412,7 @@ So we just ran Merqury on our E. coli assembly, and evaluated it using the HiFi 
     cd ~/obss_2023/genome_assembly/assembly_qc
     mkdir merqury_trio
     cd merqury_trio
+    # Go get the necessary files
     ln -s /nesi/nobackup/nesi02659/LRA/resources/assemblies/verkko/full/trio/assembly/assembly.*.fasta .
     ln -s /nesi/nobackup/nesi02659/LRA/resources/maternal.k30.hapmer.meryl .
     ln -s /nesi/nobackup/nesi02659/LRA/resources/paternal.k30.hapmer.meryl .
@@ -428,8 +429,6 @@ So we just ran Merqury on our E. coli assembly, and evaluated it using the HiFi 
         ../assembly.haplotype1.fasta \
         ../assembly.haplotype2.fasta \
         output
-
-    cd -/lra
     ```
 
 You can also look in this folder for the merqury outputs if there isn't enough time to run the actual program: `/nesi/nobackup/nesi02659/LRA/resources/merqury`
@@ -466,10 +465,21 @@ Two more types of errors we use to assess assemblies are switch errors and Hammi
 
 ![switch errors](https://raw.githubusercontent.com/human-pangenomics/hprc-tutorials/GA-workshop/assembly/genomics_aotearoa/images/qc/yak_switcherror.png)
 
-As the image illustrates, switch errors occur when an assembly _switches_ between haplotypes. These errors are more prevalent in pseudohaplotype (_e.g._, primary/alternate) assemblies that did not use any phasing data, as the assembler has no way of properly linking haplotype blocks, which can result in mixed hapmer content contigs that are a chimera of parental sequences.
+Let's first create a director within `assembly_qc` for it.
 
 !!! terminal "code"
 
+   ```bash
+   cd ~/obss_2023/genome_assembly/assembly_qc
+   mkdir yak
+   cd yak
+   ```
+
+As the image illustrates, switch errors occur when an assembly _switches_ between haplotypes. These errors are more prevalent in pseudohaplotype (_e.g._, primary/alternate) assemblies that did not use any phasing data, as the assembler has no way of properly linking haplotype blocks, which can result in mixed hapmer content contigs that are a chimera of parental sequences.
+
+
+!!! terminal "code"
+   
     ```bash
     #!/bin/bash -e
     #SBATCH --account       nesi02659
@@ -481,8 +491,8 @@ As the image illustrates, switch errors occur when an assembly _switches_ betwee
     #SBATCH --error         slurmlogs/%x.%j.err
     #SBATCH --partition     milan
 
-    ## change to qc dir, link things
-    cd ~/obss_2023/genome_assembly/assembly_qc
+    ## change to qc dir, link the necessary files
+    cd ~/obss_2023/genome_assembly/assembly_qc/yak
     ln -s /nesi/nobackup/nesi02659/LRA/resources/yak .
     ln -s /nesi/nobackup/nesi02659/LRA/resources/assemblies/hifiasm/full/hic .
     ln -s /nesi/nobackup/nesi02659/LRA/resources/assemblies/hifiasm/full/trio .
@@ -511,7 +521,7 @@ Another way to assess an assembly is via **completeness**, particularly with reg
 
 ![asmgene](https://github.com/GenomicsAotearoa/long-read-assembly/blob/main/docs/images/qc/asmgene.png?raw=true)
 
-A perfect asesmbly would have %MMC be zero, while a higher fraction indicates the assembly has collapsed some of these multi-copy genes. Additionally, you can look at the presence (or absence!) of expected single-copy genes in order to check gene completeness of the assembly.
+A perfect assembly would have %MMC be zero, while a higher fraction indicates the assembly has collapsed some of these multi-copy genes. Additionally, you can look at the presence (or absence!) of expected single-copy genes in order to check gene completeness of the assembly.
 
 The output will be a tab-delimed list of metrics and the value of that metric for the reference and for your given assembly. The line **full_sgl** gives the number of single-copy genes present in the reference and your assembly&mdash;if these numbers are off-balanced, then you might have false duplications, which are also pointed out on the **full_dup** line. For the multi-copy genes, you can look at **dup_cnt** to see the number of multi-copy genes in the reference and see how many of those genes are still multi-copy in your assembly. You can then use these values to calculate %MMC via the formula `1 - (dup_cnt asm / dup_cnt ref)`.
 
