@@ -43,11 +43,8 @@ Let's get some basic statistics for an assembly using a tool called **gfastats**
 !!! terminal "code"
 
     ```bash
-    ## let's symlink the file in a way that's easier to refer to
     cd ~/obss_2023/genome_assembly
-    mkdir -p assembly_qc/gfastats
     cd assembly_qc/gfastats
-    ln -s /nesi/nobackup/nesi02659/LRA/resources/assemblies/verkko/full/trio/assembly/assembly.*.fasta .
     ls -la          # you should see a bunch of "files" that are actually symlinks pointing to their actual content
     ```
     Now we're ready to roll!
@@ -57,7 +54,7 @@ Let's get some basic statistics for an assembly using a tool called **gfastats**
     gfastats assembly.haplotype1.fasta
     ```
 
-    - Shouldn't take about 10 seconds
+    - It should take about 20 seconds
 
     ??? success "Output"
 
@@ -104,7 +101,6 @@ Remember that the file we initially got was an assembly _graph_&mdash;what if we
 !!! terminal "code"
 
     ```bash
-    ln -s /nesi/nobackup/nesi02659/LRA/resources/assemblies/verkko/full/trio/assembly/5-untip/unitig-normal-connected-tip.gfa .
     gfastats --discover-paths unitig-normal-connected-tip.gfa
     ```
     ??? success "Output"
@@ -169,8 +165,8 @@ Now that we know how to get the statistics for one assembly, let's get them for 
 
     ```bash
     paste \
-    <(gfastats -t --discover-paths /nesi/nobackup/nesi02659/LRA/resources/assemblies/verkko/full/trio/assembly/1-buildGraph/hifi-resolved.gfa) \
-    <(gfastats -t --discover-paths /nesi/nobackup/nesi02659/LRA/resources/assemblies/verkko/full/trio/assembly/5-untip/unitig-normal-connected-tip.gfa \
+    <(gfastats -t --discover-paths hifi-resolved.gfa) \
+    <(gfastats -t --discover-paths unitig-normal-connected-tip.gfa \
     | cut -f 2)
     ```
     !!! info ""
@@ -258,15 +254,12 @@ Let's try this out on the _E. coli_ Verkko assembly. First we need a Meryl datab
 
     ```bash
     cd ~/obss_2023/genome_assembly
-    mkdir -p assembly_qc/merqury
     cd assembly_qc/merqury
     ```
-    We just made a directory for our runs, now let's sym link the fasta and reads here so we can refer to them more easily
+    If you use 'ls', youll be able to see the assembly and the reads.
+   
     ```
-    ln -s ~/obss_2023/genome_assembly/assembly/verkko_test/assembly/assembly.fasta .
-    ln -s ~/obss_2023/genome_assembly//assembly/verkko_test/hifi.fastq.gz .
-    ```
-    Now we can run it!
+    Now we can run Mercury!
     ```
     module purge
     module load Merqury
