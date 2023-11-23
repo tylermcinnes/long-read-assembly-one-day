@@ -267,7 +267,7 @@ You can see that this dataset is for _E. coli_ and there is both HiFi and ONT da
     #SBATCH --job-name      test_verkko
     #SBATCH --cpus-per-task 8
     #SBATCH --time          00:15:00
-    #SBATCH --mem           24G
+    #SBATCH --mem           12G
     #SBATCH --output        slurmlogs/%x.%j.log
     #SBATCH --error         slurmlogs/%x.%j.err
 
