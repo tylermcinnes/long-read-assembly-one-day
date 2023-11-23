@@ -256,14 +256,13 @@ Let's try this out on the _E. coli_ Verkko assembly. First we need a Meryl datab
     cd ~/obss_2023/genome_assembly
     cd assembly_qc/merqury
     ```
-    If you use 'ls', youll be able to see the assembly and the reads.
-   
+    Let's grab the Verkko assembly we created earlier. 
     ```
+    ....
+    
     Now we can run Mercury!
     ```
-    module purge
-    module load Merqury
-    sbatch --account nesi02659 --job-name=meryl --time=00:15:00 --cpus-per-task 8 --mem=24G -p milan --wrap="meryl count k=30 memory=24 threads=8 hifi.fastq.gz output read-db.meryl"
+    meryl count k=30 memory=4 threads=2 hifi.fastq.gz output read-db.meryl
     ```
 
 ??? note "`--wrap` ???"
