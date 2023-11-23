@@ -59,7 +59,7 @@ Note that the test data is not human (this matters for the `--tax-id` parameter)
         screen genome \
         --fasta ./fcsgx_test.fa.gz \
         --out-dir ./gx_out \
-        --gx-db /nesi/nobackup/nesi02659/LRA/resources/fcs/test-only  \
+        --gx-db test-only  \
         --tax-id 6973
     ```
 
@@ -175,10 +175,8 @@ There is a file created called something like `*fcs_gx_report.txt`. Open it in y
     ```
     Then you would just run the slurm script. Don't do this now. The results are boring for this assembly and the run takes 500GB of memory! (This is required to load the contamination database into memory -- if you don't give fcs enough memory it will take much much longer.)
 
-    We've run this for you, and you can find the results here:
-    ```
-    /nesi/nobackup/nesi02659/LRA/resources/assemblies/hifiasm/full/trio/asm_fcs_output/
-    ```
+    We've run this for you, and you can find the results in the folder `asm_fcs_output`:
+
 
 ## Genome Annotation
 
@@ -325,22 +323,11 @@ of HG002.
 
     ```shell
     cd ~/obss_2023/genome_assembly/
-    mkdir liftoff-annotation
     cd liftoff-annotation
     ```
 
 **Gather the necessary files**
 
-!!! terminal "code"
-
-    ```shell
-    ln -s /nesi/nobackup/nesi02659/LRA/resources/chm13/CHM13-T2T.renamed.gff.gz chm13-annotations.gff.gz
-    ln -s /nesi/nobackup/nesi02659/LRA/resources/chm13/CHM13-T2T.renamed.gff.liftoff.sqlite3 chm13-annotations.gff.liftoff.sqlite3
-    ln -s /nesi/nobackup/nesi02659/LRA/resources/chm13/chm13v2.0.fa chm13.fa
-    ln -s /nesi/nobackup/nesi02659/LRA/resources/chm13/chm13v2.0.fa.fai chm13.fa.fai
-    ln -s /nesi/nobackup/nesi02659/LRA/resources/assemblies/verkko/full/trio/assembly/assembly.haplotype1.fasta asm.hap1.fa
-    ln -s /nesi/nobackup/nesi02659/LRA/resources/assemblies/verkko/full/trio/assembly/assembly.haplotype1.fasta.fai asm.hap1.fa.fai
-    ```
 
 ??? info "What's with the `*.sqlite3` file?"
 
@@ -414,7 +401,7 @@ First create a shell script `liftoff.sh` with the following content:
 -->
 
 This will probably take ~1 hour with 8 CPUs and 48 GB of memory. You could
-submit it as a job; however, we will pull pre-baked results for the next step.
+submit it as a job; however, we will pull pre-computed results for the next step.
 
 ??? info "How to submit Liftoff with `sbatch`"
 
@@ -424,13 +411,9 @@ submit it as a job; however, we will pull pre-baked results for the next step.
         sbatch -J liftoff -N1 -n1 -c8 --mem=48G -t 0-02:00 -A nesi02659 -o %x.%j.log liftoff.sh
         ```
 
-To skip the run-time, let&rsquo;s grab the pre-baked results:
+To skip the run-time, we have pre-computed the output 'asm.hap1.annotations.gff' in your directory.
 
 !!! terminal "code"
-
-    ```shell
-    ln -s /nesi/nobackup/nesi02659/LRA/resources/liftoff/asm.hap1.annotations.gff
-    ```
 
 **Look at the output GFF3 file**
 
@@ -504,7 +487,6 @@ The first thing we would like to do is to find out how our assembled genome comp
 
     ```bash
     cd ~/obss_2023/genome_assembly/
-    mkdir -p annotation/mashmap
     cd annotation/mashmap
     ```
 
@@ -513,15 +495,8 @@ The first thing we would like to do is to find out how our assembled genome comp
 !!! terminal "code"
 
     We are going to use CHM13 v2.0 (which includes a Y chromosome)
+    as well as haplotype 1 from our Verkko trio assembly in the file `assembly.haplotype1.fasta.
 
-    ```bash
-    ln -s /nesi/nobackup/nesi02659/LRA/resources/chm13/chm13v2.0.fa
-    ```
-    as well as haplotype 1 from our Verkko trio assembly
-
-    ```bash
-    ln -s /nesi/nobackup/nesi02659/LRA/resources/assemblies/verkko/full/trio/assembly/assembly.haplotype1.fasta
-    ```
 
 **Run MashMap**
 
@@ -623,21 +598,11 @@ Today we are going to use minimap2 to align ONT reads that have 5mC information 
 
     ```bash
     cd ~/obss_2023/genome_assembly/
-    mkdir -p annotation/minimap2
     cd annotation/minimap2
     ```
 
-**Copy over our Verkko trio assembly**
-
 We are going to use the diploid version of our Verkko trio assembly. (This just means that the maternal and paternal haplotypes are both included in the fasta.)
 
-!!! terminal "code"
-
-    ```bash
-    cp \
-        /nesi/nobackup/nesi02659/LRA/resources/assemblies/verkko/full/trio/assembly/assembly.fasta \
-        verkko_trio_diploid.fa
-    ```
 
 **Create a minimap2 slurm script**
 
@@ -649,7 +614,7 @@ Open your favourite text editor
     nano ont_mm2.sl
     ```
 
-And paste in the following
+And paste in the following:
 
 !!! terminal "code"
 
@@ -682,7 +647,7 @@ And paste in the following
 
     #do the mapping with methylation tags by dumping the Mm/Ml tags to the fastq headers
     samtools fastq \
-        -TMm,Ml /nesi/nobackup/nesi02659/LRA/resources/ont_ul/03_08_22_R941_HG002_2_Guppy_6.1.2_5mc_cg_prom_sup.bam \
+        -TMm,Ml 03_08_22_R941_HG002_2_Guppy_6.1.2_5mc_cg_prom_sup.bam \
         | minimap2 -t 24 ${in_args} verkko_trio_diploid.fa.mmi - \
         | samtools view -@ 24 -bh - \
         | samtools sort -@ 24 - > \
@@ -709,10 +674,6 @@ This should take only 3 hours or so, but we have some pre-baked results for you 
 
 !!! terminal "code"
 
-    ```bash
-    ln -s /nesi/nobackup/nesi02659/LRA/resources/ont_ul/aligned/verkko_trio_diploid.mm2.5mC.bam
-    ln -s /nesi/nobackup/nesi02659/LRA/resources/ont_ul/aligned/verkko_trio_diploid.mm2.5mC.bam.bai
-    ```
 
 !!! jupyter "Now view the alignments in IGV"
 
