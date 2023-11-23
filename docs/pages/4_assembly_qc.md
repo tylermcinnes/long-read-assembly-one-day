@@ -254,11 +254,13 @@ Let's try this out on the _E. coli_ Verkko assembly. First we need a Meryl datab
 
     ```bash
     cd ~/obss_2023/genome_assembly
+    mkdir -p  assembly_qc/merqury
     cd assembly_qc/merqury
     ```
-    Let's grab the Verkko assembly we created earlier. 
+  We just made a directory for our runs, now let's sym link the fasta and reads here so we can refer to them more easily
     ```
-    ....
+    ln -s ~/obss_2023/genome_assembly/assembly/verkko_test/assembly/assembly.fasta .
+    ln -s ~/obss_2023/genome_assembly//assembly/verkko_test/hifi.fastq.gz .
     
     Now we can run Mercury!
     ```
@@ -376,8 +378,6 @@ Use your text editor of choice to make a Slurm script (`run_merqury.sl`) to run 
         ../read-db.meryl \
         ../assembly.fasta \
         output
-
-    cd -/lra
     ```
 
 ??? note "What's that `export` command doing there?"
