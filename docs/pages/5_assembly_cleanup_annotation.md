@@ -37,7 +37,7 @@ With that understanding, we are ready to test it out for ourselves...
     curl -LO https://github.com/ncbi/fcs/raw/main/examples/fcsgx_test.fa.gz
     ```
 
-This tool is a python script that calls a Docker/Singularity container. This was done because contamination screens notoriously require a ton of dependencies. So having a Docker container makes things easier on the user. The docker container requires that a database of contaminants are downloaded. We have already downloaded the test database here: `/nesi/nobackup/nesi02659/LRA/resources/fcs/test-only`. The container has already been downloaded as well, we just need to load the singularity module and let FCS know where the container is:
+This tool is a python script that calls a Docker/Singularity container. This was done because contamination screens notoriously require a ton of dependencies. So having a Docker container makes things easier on the user. The docker container requires that a database of contaminants are downloaded. We have already downloaded the test database here: test-only`. The container has already been downloaded as well, we just need to load the singularity module and let FCS know where the container is:
 
 !!! terminal "code"
 
