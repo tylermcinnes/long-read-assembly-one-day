@@ -143,7 +143,7 @@ There is a file created called something like `*fcs_gx_report.txt`. Open it in y
 
     We will copy over our prebaked Hifiasm trio assembly (maternal haplotype) and create a slurm script...
     ```bash
-    cp /nesi/nobackup/nesi02659/LRA/resources/assemblies/hifiasm/full/trio/HG002.mat.fa.gz .
+    cp /nesi/project/nesi02659/obss_2023/resources/genome_assembly/trio/HG002.mat.fa.gz .
 
     nano fcs_full.sl
     ```
@@ -170,13 +170,12 @@ There is a file created called something like `*fcs_gx_report.txt`. Open it in y
     screen genome \
     --fasta ./HG002.mat.fa.gz \
     --out-dir ./asm_fcs_output \
-    --gx-db /nesi/nobackup/nesi02659/LRA/resources/fcs/gxdb \
+    --gx-db /nesi/project/nesi02659/obss_2023/resources/genome_assembly/gxdb \
     --tax-id 9606
     ```
     Then you would just run the slurm script. Don't do this now. The results are boring for this assembly and the run takes 500GB of memory! (This is required to load the contamination database into memory -- if you don't give fcs enough memory it will take much much longer.)
 
     We've run this for you, and you can find the results in the folder `asm_fcs_output`:
-
 
 ## Genome Annotation
 
@@ -327,7 +326,6 @@ of HG002.
     ```
 
 **Gather the necessary files**
-
 
 ??? info "What's with the `*.sqlite3` file?"
 
@@ -497,7 +495,6 @@ The first thing we would like to do is to find out how our assembled genome comp
     We are going to use CHM13 v2.0 (which includes a Y chromosome)
     as well as haplotype 1 from our Verkko trio assembly in the file `assembly.haplotype1.fasta.
 
-
 **Run MashMap**
 
 !!! terminal "code"
@@ -603,7 +600,6 @@ Today we are going to use minimap2 to align ONT reads that have 5mC information 
 
 We are going to use the diploid version of our Verkko trio assembly. (This just means that the maternal and paternal haplotypes are both included in the fasta.)
 
-
 **Create a minimap2 slurm script**
 
 Open your favourite text editor
@@ -673,7 +669,6 @@ This should take only 3 hours or so, but we have some pre-baked results for you 
 **Before switching over to your virtual desktop, link the prerun alignments to your working directory**
 
 !!! terminal "code"
-
 
 !!! jupyter "Now view the alignments in IGV"
 
