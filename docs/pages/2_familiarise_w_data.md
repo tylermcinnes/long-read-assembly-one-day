@@ -32,7 +32,7 @@ Next, downsample the ONT UL reads, too.
 
 !!! terminal "code"
     ```bash
-    samtools fastq -@4 \
+    samtools fastq -@2 \
         03_08_22_R941_HG002_1_Guppy_6.1.2_5mc_cg_prom_sup.bam \
         | head -n 20000 \
         | pigz > ont_ul_5k_reads.fq.gz &
