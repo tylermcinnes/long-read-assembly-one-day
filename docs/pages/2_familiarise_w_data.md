@@ -178,8 +178,8 @@ In the Venn diagram above, the maternal hapmer *k*-mers/DB are on the left-hand 
 
     ```bash
     zcat HG003_HiSeq30x_subsampled_R1.fastq.gz \
-        | head -n 20000000 \
-        | pigz > HG003_HiSeq30x_5M_reads_R1.fastq.gz &
+        | head -n 2000000 \
+        | pigz > HG003_HiSeq30x_05M_reads_R1.fastq.gz 
     ```    
 
 **Create a *k*-mer DB from an Illumina read set**
@@ -194,8 +194,8 @@ In the Venn diagram above, the maternal hapmer *k*-mers/DB are on the left-hand 
         k=30 \
         threads=2 \
         memory=8 \
-        HG003_HiSeq30x_5M_reads_R1.fastq.gz \
-        output paternal_5M_compress.k30.meryl
+        HG003_HiSeq30x_05M_reads_R1.fastq.gz \
+        output paternal_05M_compress.k30.meryl
     ```
 
 This should be pretty fast because we are just using a small amount of data to get a feel for the program. The output of Meryl is a folder that contains 64 index files and 64 data files. If you try and look at the data files you'll see that they aren't human readable. In order to look at the actual *k*-mers, you have to use Meryl to print them.
@@ -207,7 +207,7 @@ This should be pretty fast because we are just using a small amount of data to g
     ```bash
     meryl print \
         greater-than 1 \
-        paternal_5M_compress.k30.meryl \
+        paternal_05M_compress.k30.meryl \
         | head
     ```
 The first column is the *k*-mer and the second column is the count of that *k*-mer in the dataset. We are just looking at the first few here.
@@ -218,7 +218,7 @@ The first column is the *k*-mer and the second column is the count of that *k*-m
 
     ```bash
     meryl statistics \
-        paternal_5M_compress.k30.meryl \
+        paternal_05M_compress.k30.meryl \
         | head -n 20
     ```
 
@@ -316,8 +316,8 @@ Yak (Yet-Another Kmer Analyzer) is the kmer counter that we need for Hifiasm ass
 
     ```bash
     zcat HG003_HiSeq30x_subsampled_R2.fastq.gz \
-        | head -n 20000000 \
-        | pigz > HG003_HiSeq30x_5M_reads_R2.fastq.gz &
+        | head -n 2000000 \
+        | pigz > HG003_HiSeq30x_05M_reads_R2.fastq.gz 
     ```  
 
 **Look up yak's github and figure out how to make a count/kmer db for this data**
@@ -348,11 +348,10 @@ Yak won't work on our Jupyter instances, so create a slurm script that has 32 co
         -t32 \
         -b37 \
         -o HG003_subset.yak \
-         <(zcat HG003_HiSeq30x_5M_reads_R*.fastq.gz) \
-         <(zcat HG003_HiSeq30x_5M_reads_R*.fastq.gz)
+         <(zcat HG003_HiSeq30x_05M_reads_R*.fastq.gz) \
+         <(zcat HG003_HiSeq30x_05M_reads_R*.fastq.gz)
     ``` 
 
-    Notice that for paired-end reads we have to stream both reads to yak twice!
 
 If you haven't already, execute your yak script using slurm (takes about 2 minutes). 
 !!! terminal "code"
