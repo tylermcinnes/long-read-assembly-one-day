@@ -177,7 +177,7 @@ In the Venn diagram above, the maternal hapmer *k*-mers/DB are on the left-hand 
 !!! terminal "code"
 
     ```bash
-    zcat 
+    zcat \
         | head -n 20000000 \
         | pigz > HG003_HiSeq30x_5M_reads_R1.fastq.gz &
     ```    
