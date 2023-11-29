@@ -409,9 +409,13 @@ submit it as a job; however, we will pull pre-computed results for the next step
         sbatch -J liftoff -N1 -n1 -c8 --mem=48G -t 0-02:00 -A nesi02659 -o %x.%j.log liftoff.sh
         ```
 
-To skip the run-time, we have pre-computed the output 'asm.hap1.annotations.gff' in your directory.
+To skip the run-time, we have pre-computed the output 'asm.hap1.annotations.gff' somewhere on nesi. You can access by creating a lin (i.e. a shortcut):
 
 !!! terminal "code"
+   ```shell
+    ln -s /nesi/nobackup/nesi02659/LRA/resources/liftoff/asm.hap1.annotations.gff
+   ```
+
 
 **Look at the output GFF3 file**
 
