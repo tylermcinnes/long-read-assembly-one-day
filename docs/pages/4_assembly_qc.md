@@ -262,11 +262,12 @@ We just made a directory for our runs, now let's sym link the fasta and reads he
 ```
 ln -s ~/obss_2023/genome_assembly/assembly/verkko_test/assembly/assembly.fasta .
 ln -s ~/obss_2023/genome_assembly//assembly/verkko_test/hifi.fastq.gz .
+```
 
-    Now we can run Mercury!
-    ```
-    meryl count k=30 memory=4 threads=2 hifi.fastq.gz output read-db.meryl
-    ```
+Now we can run Mercury!
+```
+meryl count k=30 memory=4 threads=2 hifi.fastq.gz output read-db.meryl
+```
 
 ??? note "`--wrap` ???"
 
