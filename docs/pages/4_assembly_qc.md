@@ -372,7 +372,7 @@ Use your text editor of choice to make a Slurm script (`run_merqury.sl`) to run 
     export MERQURY=/opt/nesi/CS400_centos7_bdw/Merqury/1.3-Miniconda3/merqury
 
     ## create solo merqury dir and use it
-    mkdir merqury_solo
+    mkdir -p merqury_solo
     cd merqury_solo
 
     ## run merqury
@@ -412,7 +412,7 @@ We just ran Merqury on our E. coli assembly, and evaluated it using the HiFi rea
 
     ## create trio merqury dir and use it
     cd ~/obss_2023/genome_assembly/assembly_qc
-    mkdir merqury_trio
+    mkdir -p  merqury_trio
     cd merqury_trio
     # Go get the necessary files
     OBSS_RESOURCES=/nesi/project/nesi02659/obss_2023/resources/genome_assembly
@@ -421,7 +421,7 @@ We just ran Merqury on our E. coli assembly, and evaluated it using the HiFi rea
     ln -s $OBSS_RESOURCES/paternal.k30.hapmer.meryl .
 
     ## let's run the program in a results directory to make things a little neater
-    mkdir results
+    mkdir -p results
     cd results
 
     ## run merqury
@@ -474,7 +474,7 @@ Let's first create a director within `assembly_qc` for it.
 
 ```bash
 cd ~/obss_2023/genome_assembly/assembly_qc
-mkdir yak
+mkdir -p yak
 cd yak
 ```
 
