@@ -208,7 +208,7 @@ We are going to take a look at the assembly GFA file in a browser called Bandage
     **Load a unitig GFA**
 
     1. Click the *File* dropdown then *Load Graph*
-    2. Navigate to our current folder (`day2_assembly/hifiasm_test`)
+    2. Navigate to our current folder (`cd ~/obss_2023/genome_assembly/assembly/hifiasm_test`)
     3. Select the `test.bp.r_utg.noseq.gfa` file and press the **Open** icon
     4. Under **Graph Drawing** on the left-hand side click **Draw Graph**
 
